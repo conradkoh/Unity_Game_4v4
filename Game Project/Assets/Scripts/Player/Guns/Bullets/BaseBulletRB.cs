@@ -33,6 +33,11 @@ public class BaseBulletRB : MonoBehaviour {
 	void OnCollisionEnter(Collision damagedObjectCollider){
 		GameObject damagedObject = damagedObjectCollider.gameObject;
 		Stats dmgObjStat = damagedObject.GetComponent<Stats>();
+        if (dmgObjStat == null)
+        {
+            Debug.Log("no stat component");
+            return;
+        }
 		dmgObjStat.TakeDamage(damage);
 		Debug.Log("give: " + damage);
 		Destroy(gameObject);

@@ -20,6 +20,11 @@ public class ControlZoneActivator : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		GameObject go = collider.gameObject;
 		Player player = go.GetComponent<Player>();
+        if(player == null)
+        {
+            Debug.Log("no player component");
+            return;
+        }
 		Debug.Log ("Enter");
 		if(occupantCount == 0){
 			controlZone.GiveControl(player);
