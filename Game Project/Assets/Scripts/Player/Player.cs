@@ -2,24 +2,29 @@
 using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour {
-	public Camera fpCamera;
-	public Camera tpCamera;
+
+    //Settings
 	public float movementSpeed = 30;
 	public float mouseSensitivity = 5;
 	public float gravity = 10.0f;
 	public float jumpHeight = 15.0f;
+
+	//Child Objects
+	public Camera fpCamera;
+	public Camera tpCamera;
+    private Stats stats;
+
 	public Vector3 camPosition = new Vector3(10, 70, 10);
-	public Color teamColor = Color.blue;
-	public string name = "Grey Character";
 	public LayerMask navigationLayer;
 	public BaseGun gun;
-	public Vector3 direction;
+	public Vector3 direction = new Vector3(1,0,0);
 	private GameObject fpUI;
 	private NavMeshAgent navMeshAgent;
 
 	private enum CONTROLS{ FP, TP};
 	private CONTROLS controlMode = CONTROLS.FP;
 	private Vector3 displacement = new Vector3(0, 0, 0);
+
 	//First Person Variables
 	private float verticalAngle = 0;
 	private float angleLimit = 70.0f;
@@ -29,6 +34,11 @@ public class Player : MonoBehaviour {
 	private Ray playerCrosshairRay;
 	//Third Person Variables
 	bool test = true;
+
+	//Player attributes
+	public Color teamColor = Color.blue;
+    public Color playerColor = Color.blue;
+	public string name = "Blue Character";
 
 
 	// Use this for initialization
@@ -52,8 +62,29 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	#region First Person Methods
-	void HandleFirstPersonControls(){
+
+
+    #region Aesthetics
+    public void SetColor(Color color)
+    {
+        MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
+        mr.material.color = color;
+        
+    }
+
+    public void Die()
+    {
+        if (!stats.IsAlive())
+        {
+            MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
+            mr.material.color = Color.grey;
+        }
+    }
+    #endregion
+
+
+    #region First Person Methods
+    void HandleFirstPersonControls(){
 		GameObject go = GetObjectFromCrossHair();
 		HandleFPInteraction(go);
 		HandleFPMouseControls();
@@ -182,6 +213,9 @@ public class Player : MonoBehaviour {
 		InitializeControlMode();
 		InitializeCharacterController();
 		InitializeLayers();
+        InitializeComponents();
+        InitializeComponentEvents();
+        InitializeAesthetics();
 	}
 
 	void InitializeUI(){
@@ -218,7 +252,29 @@ public class Player : MonoBehaviour {
 		navigationLayer = LayerMask.GetMask("Navigation");
 	}
 
-	void SetControlMode(CONTROLS control){
+    void InitializeComponents()
+    {
+        stats = GetComponent<Stats>();
+    }
+    
+    void InitializeComponentEvents()
+    {
+        stats.PlayerDied += PlayerDied;
+    }
+
+    void InitializeAesthetics()
+    {
+        MeshRenderer mr = GetComponent<MeshRenderer>();
+        mr.material.color = playerColor;
+    }
+
+    #region Events
+    void PlayerDied(string killerName)
+    {
+        SetColor(Color.grey);
+    }
+    #endregion
+    void SetControlMode(CONTROLS control){
 		if(control == CONTROLS.FP){
 			controlMode = CONTROLS.FP;
 			fpCamera.enabled = true;

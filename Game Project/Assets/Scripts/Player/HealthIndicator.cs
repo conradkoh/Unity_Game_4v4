@@ -14,6 +14,6 @@ public class HealthIndicator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		textMesh.text = stats.health.ToString();
+        textMesh.text = stats.health;
 	}
 }
