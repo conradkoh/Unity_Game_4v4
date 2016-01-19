@@ -246,6 +246,7 @@ public class OtherPlayer : MonoBehaviour {
         InitializeComponents();
         InitializeComponentEvents();
         InitializeAesthetics();
+        DisableViews();
     }
 
     void InitializeUI()
@@ -305,6 +306,12 @@ public class OtherPlayer : MonoBehaviour {
     {
         MeshRenderer mr = GetComponent<MeshRenderer>();
         mr.material.color = playerColor;
+    }
+    
+    void DisableViews()
+    {
+        tpCamera.enabled = false;
+        fpCamera.enabled = false;
     }
     #endregion
 

@@ -7,7 +7,7 @@ public class HealthIndicator : MonoBehaviour {
 	Stats stats;
 	// Use this for initialization
 	void Start () {
-		player = transform.parent.gameObject;
+		player = transform.parent.transform.parent.gameObject;
 		stats = player.GetComponent<Stats>();
 		textMesh = GetComponent<TextMesh>();
 	}
